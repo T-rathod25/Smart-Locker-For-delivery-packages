@@ -1,0 +1,104 @@
+#include <Servo.h>
+#include <SoftwareSerial.h>
+
+// Define pins for ultrasonic sensor
+const int trigPin = 9;
+const int echoPin = 10;
+
+// Define pins for GSM module (using SoftwareSerial)
+SoftwareSerial gsm(7, 8); // RX, TX
+
+// Servo motor pin
+Servo lockerServo;
+const int servoPin = 6;
+
+// Distance threshold in cm to detect package
+const int packageThreshold = 10;
+
+// Variable to store duration and distance
+long duration;
+int distance;
+
+bool packageDetected = false;
+
+void setup() {
+// Initialize serial communications
+Serial.begin(9600);
+gsm.begin(9600); // GSM module baud rate
+
+// Set ultrasonic sensor pins
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+
+// Attach servo motor to pin and set initial position to unlocked (0 degrees)
+lockerServo.attach(servoPin);
+lockerServo.write(0);
+
+Serial.println("Smart Locker System Initialized.");
+delay(2000); // Wait 2 seconds to stabilize
+}
+
+void loop() {
+// Trigger the ultrasonic sensor
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+
+// Measure the echo duration
+duration = pulseIn(echoPin, HIGH);
+
+// Calculate distance in cm
+distance = duration * 0.034 / 2;
+
+Serial.print("Distance: ");
+Serial.print(distance);
+Serial.println(" cm");
+
+if (distance > 0 && distance < packageThreshold && !packageDetected) {
+packageDetected = true;
+Serial.println("Package detected inside locker!");
+
+// Lock the locker by turning servo to 90 degrees
+lockerServo.write(90);
+delay(1000);
+
+// Send SMS notification
+sendSMS();
+
+// Optional: keep locker locked for some time
+}
+delay(1000); // Wait a second before next measurement
+}
+
+void sendSMS() {
+Serial.println("Sending SMS notification...");
+
+gsm.println("AT"); // Check communication
+delay(1000);
+
+gsm.println("AT+CMGF=1"); // Set SMS to text mode
+delay(1000);
+
+// Replace with recipient phone number
+gsm.println("AT+CMGS=\"+1234567890\"");
+delay(1000);
+
+// SMS message content
+gsm.print("Your package has been securely delivered and locked in the Smart Locker.");
+delay(500);
+
+gsm.write(26); // ASCII code for CTRL+Z to send the message
+delay(5000);
+
+Serial.println("SMS sent.");
+}
+
+
+
+//Important Notes:
+• Replace  "+1234567890"  in the  sendSMS()  function with the owner’s real phone number including country code.
+• This code uses a servo motor connected to pin 6 to lock/unlock the locker by moving to 0° (unlocked) and 90° (locked). Adjust angles based on your servo installation.
+• Ultrasonic sensor HC-SR04 trigger pin on 9, echo pin on 10 (adjust as per your wiring).
+• GSM module RX/TX on pins 7 and 8. Use  SoftwareSerial  for communication with GSM because default serial is for debugging.
