@@ -1,0 +1,33 @@
+Project Title:
+Smart IoT-Based Delivery Locker System for Secure Package Receiving
+Abstract / Idea Summary:
+The increasing demand for online shopping has led to frequent delivery challenges, especially when customers are not at home to receive parcels. This often causes failed deliveries, cancellations, or the need for re-storage. To address this, the proposed system introduces a Smart Locker for package deliveries.
+The locker is placed at the user’s residence and integrates sensors and GSM/IoT communication modules. When a delivery agent places the package inside, the ultrasonic sensor detects the parcel, the locker automatically locks, and the customer is immediately notified by SMS/app alert through the GSM module. This ensures secure delivery without requiring the recipient’s presence.
+Key Components:
+• Microcontroller (Arduino / ESP32 / Raspberry Pi) – acts as the brain of the system
+• Ultrasonic Sensor – detects placement of the package inside the locker
+• Solenoid Lock / Servo Motor – locks/unlocks the locker
+• GSM Module (e.g., SIM800/900) – sends SMS or notifications to the owner’s phone
+• Power Supply – regulates power to all components
+• Optional Features:
+• OTP (One-time password) system for courier authentication
+• Mobile App integration (IoT platform like Blynk, Firebase, or MQTT)
+• Weight sensor for package verification
+• Camera module for proof-of-delivery photos
+Working Principle:
+1. Locker stays in unlocked state before delivery.
+2. Delivery person places the package inside.
+3. Ultrasonic/weight sensor detects the parcel and triggers the system.
+4. The locker automatically locks using a solenoid/servo motor.
+5. The GSM module sends an SMS/notification to the owner (e.g., “Package received and stored securely”).
+6. Owner can later unlock the locker using a mobile app, password, or OTP.
+Advantages:
+• Prevents missed deliveries when user is away.
+• Provides security for packages (prevents theft).
+• Saves courier time (no rescheduling needed).
+• Can be scaled for apartment complexes or offices.
+Applications:
+• Individual homes
+• Apartment societies
+• E-commerce pickup stations
+• Office buildings
